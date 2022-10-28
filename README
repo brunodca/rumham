@@ -1,1 +1,1 @@
-Verify if commander deck respect some arbitrary rules with the help of scryfall API.
+Verify if commander decks respect arbitrary rules based on a comparison between deck cards and the result of a scryfall API query.
