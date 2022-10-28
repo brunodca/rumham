@@ -1,5 +1,5 @@
 # Purpose
-Given a deck list in the magic online format, identify which cards are not legal
+Given a deck list in the **magic online format**, identify which cards are not legal
 in commander heritage format.
 
 # How to use
