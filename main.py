@@ -104,8 +104,11 @@ def getHeritageDataCardNames(
     card_name_list = []
     for card in heritage_data:
         card_name = card["name"]
-        # in case the card is double sided, the names are bundled and need to be
-        # separated
+        # Deck stats used the full name, including the second card name so we
+        # need to save it
+        card_name_list.append(card_name.lower())
+        # Tapped out only used the first card name so we need to separate and
+        # extract that.
         card_names = card_name.split("//")
         # Use only the first name since that is what the deck apps are using
         card_name_list.append(card_names[0].strip().lower())
