@@ -108,7 +108,7 @@ def getHeritageDataCardNames(
         # separated
         card_names = card_name.split("//")
         # Use only the first name since that is what the deck apps are using
-        card_name_list.append(card_names[0].strip())
+        card_name_list.append(card_names[0].strip().lower())
     return card_name_list
 
 
@@ -160,7 +160,7 @@ def main():
     heritage_card_names = getHeritageDataCardNames(heritage_data)
     deck_list = getCardsFromMagicOnlineFile(parseArguments())
     for card_in_deck_list in deck_list:
-        if card_in_deck_list not in heritage_card_names:
+        if card_in_deck_list.lower() not in heritage_card_names:
             print("--" + card_in_deck_list + "-- is not a legal card in heritage.")
 
 
