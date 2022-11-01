@@ -89,6 +89,29 @@ def loadHeritageDataFile() -> typing.List[typing.Dict]:
         return data_read
 
 
+def getHeritageDataCardNames(
+    heritage_data: typing.List[typing.Dict],
+) -> typing.List[str]:
+    """Given the list of dictionaries representing the cards, get the card names
+    and stort them out in case the card is double sided.
+
+    args
+        heritage_data list of dictionaries where each dictionary represents a card
+
+    return
+        list of strings containing the card names.
+    """
+    card_name_list = []
+    for card in heritage_data:
+        card_name = card["name"]
+        # in case the card is double sided, the names are bundled and need to be
+        # separated
+        card_names = card_name.split("//")
+        # Use only the first name since that is what the deck apps are using
+        card_name_list.append(card_names[0].strip())
+    return card_name_list
+
+
 def parseArguments():
     parser = argparse.ArgumentParser(
         prog="RumHam",
@@ -134,7 +157,7 @@ def getCardsFromMagicOnlineFile(arena_file: str) -> typing.List[str]:
 def main():
     createHeritageDataFile()
     heritage_data = loadHeritageDataFile()
-    heritage_card_names = [card["name"] for card in heritage_data]
+    heritage_card_names = getHeritageDataCardNames(heritage_data)
     deck_list = getCardsFromMagicOnlineFile(parseArguments())
     for card_in_deck_list in deck_list:
         if card_in_deck_list not in heritage_card_names:
