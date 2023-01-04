@@ -13,7 +13,11 @@ query_heritage_commander = {
     "q": "(st:core OR st:expansion) -is:digital format:commander"
 }
 
+# Name of file which stores the database of cards from scryfall.
 file_name = "./commander_heritage.json"
+
+# List of custom illegal cards that are not listed in the legitimate query
+custom_illegal_cards = ["command tower", "arcane signet", "tome of legends"]
 
 
 def isFileOK() -> bool:
@@ -52,7 +56,7 @@ def getCardListFromUrl(
     answer = requests.get(url=current_url)
     answer_json = answer.json()
     data.extend(answer_json["data"])
-    print(f"Reading {len(data)} of {answer_json['total_cards']} cards.")
+    print(f"-> Reading {len(data)} of {answer_json['total_cards']} cards.")
     if answer_json["has_more"]:
         return getCardListFromUrl(answer_json["next_page"], data)
     else:
@@ -65,7 +69,7 @@ def createHeritageDataFile():
     """
 
     if isFileOK():
-        print("Existing local card database is up to date.")
+        print("-> Existing local card database is up to date.")
         return
     print("Refreshing local card database - will take a while.")
     answer = requests.get(url=scryfall, params=query_heritage_commander)
@@ -162,9 +166,20 @@ def main():
     heritage_data = loadHeritageDataFile()
     heritage_card_names = getHeritageDataCardNames(heritage_data)
     deck_list = getCardsFromMagicOnlineFile(parseArguments())
+    illegal_cards = []
     for card_in_deck_list in deck_list:
         if card_in_deck_list.lower() not in heritage_card_names:
-            print("--" + card_in_deck_list + "-- is not a legal card in heritage.")
+            illegal_cards.append(card_in_deck_list)
+            continue
+        if card_in_deck_list.lower() in custom_illegal_cards:
+            illegal_cards.append(card_in_deck_list + " (custom illegal card)")
+
+    if illegal_cards:
+        print("-> This deck is not heritage legal due to the following cards:")
+        for card in illegal_cards:
+            print("---" + card + "---")
+    else:
+        print("-> This deck is heritage legal.")
 
 
 if __name__ == "__main__":
